@@ -30,7 +30,7 @@ def create_qa_chain(vectorstore):
     llm = ChatOllama(
         model=os.getenv(
             "OLLAMA_MODEL",
-            "radenadri/Qwen3.5-0.8B-Claude-4.6-Opus-Reasoning-Distilled-GGUF:latest",
+            "llama3.2:latest",
         ),
         temperature=0,
         base_url=os.getenv("OLLAMA_BASE_URL", _DEFAULT_OLLAMA_BASE),

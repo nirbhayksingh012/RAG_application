@@ -1,43 +1,16 @@
-import streamlit as st
-from dotenv import load_dotenv
+"""
+PDF RAG chatbot entry point.
 
-from src.loader import load_pdf
-from src.splitter import split_docs
-from src.embeddings import get_embeddings
-from src.vectorstore import create_vectorstore
-from src.rag_chain import create_qa_chain
+The UI is the React app in `frontend/`. Start the API server:
 
-load_dotenv()
+  uvicorn api:app --reload --host 0.0.0.0 --port 8000
 
-st.title("📄 Multi-PDF AI Chatbot")
+Then in another terminal (from `frontend/`):
 
-uploaded_files = st.file_uploader("Upload PDFs", type="pdf", accept_multiple_files=True)
+  npm run dev
+"""
 
-if uploaded_files:
-    all_docs = []
+import uvicorn
 
-    for file in uploaded_files:
-        file_path = f"temp_{file.name}"
-        with open(file_path, "wb") as f:
-            f.write(file.read())
-
-        docs = load_pdf(file_path)
-        all_docs.extend(docs)
-
-    split_documents = split_docs(all_docs)
-    embeddings = get_embeddings()
-    vectorstore = create_vectorstore(split_documents, embeddings)
-    qa_chain = create_qa_chain(vectorstore)
-
-    if "chat_history" not in st.session_state:
-        st.session_state.chat_history = []
-
-    query = st.text_input("Ask your question:")
-
-    if query:
-        result = qa_chain.invoke({"question": query})
-        st.session_state.chat_history.append(("You", query))
-        st.session_state.chat_history.append(("Bot", result["answer"]))
-
-    for role, message in st.session_state.chat_history:
-        st.write(f"**{role}:** {message}")
+if __name__ == "__main__":
+    uvicorn.run("api:app", host="0.0.0.0", port=8000, reload=True)

@@ -4,7 +4,9 @@ langchain-community
 langchain-ollama
 langchain-text-splitters
 faiss-cpu
-streamlit
 pypdf
 tiktoken
 python-dotenv
+fastapi
+uvicorn[standard]
+python-multipart
